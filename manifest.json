@@ -3,6 +3,7 @@
   "name": "PII Guard",
   "version": "1.0",
   "description": "Automatically detect and hide sensitive PII on webpages.",
+  "options_page": "options.html",
   "permissions": [
     "storage",
     "activeTab",
