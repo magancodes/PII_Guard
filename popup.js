@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const togglePhones = document.getElementById('toggle-phones');
   const toggleUpi = document.getElementById('toggle-upi');
   const toggleNames = document.getElementById('toggle-names');
-  const optionsBtn = document.getElementById('options-btn');
+  const whitelistList = document.getElementById('whitelist-list');
+  const newDomainInput = document.getElementById('new-domain');
+  const addDomainBtn = document.getElementById('add-domain-btn');
 
   // State
   let currentHost = '';
@@ -41,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Whitelist check
     const isWhitelisted = data.whitelist && data.whitelist.includes(currentHost);
     updateWhitelistUI(isWhitelisted);
+    renderWhitelistManager(data.whitelist || []);
   });
 
   // Event Listeners for changes
@@ -79,6 +82,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       chrome.storage.sync.set({ whitelist: list }, () => {
         updateWhitelistUI(!isListed);
+        renderWhitelistManager(list);
         notifyContentScript();
         
         // Show status
@@ -89,9 +93,65 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  optionsBtn.addEventListener('click', () => {
-    chrome.runtime.openOptionsPage();
+  addDomainBtn.addEventListener('click', () => {
+      chrome.storage.sync.get(['whitelist'], (data) => {
+          const currentWhitelist = data.whitelist || [];
+          let domain = newDomainInput.value.trim().toLowerCase();
+          if (domain) {
+              domain = domain.replace(/^https?:\/\//, '').split('/')[0];
+              if (!currentWhitelist.includes(domain)) {
+                  currentWhitelist.push(domain);
+                  chrome.storage.sync.set({ whitelist: currentWhitelist }, () => {
+                      updateWhitelistUI(currentWhitelist.includes(currentHost));
+                      renderWhitelistManager(currentWhitelist);
+                      notifyContentScript();
+                  });
+              }
+              newDomainInput.value = '';
+          }
+      });
   });
+
+  function renderWhitelistManager(whitelistArray) {
+      whitelistList.innerHTML = '';
+      if (whitelistArray.length === 0) {
+          whitelistList.innerHTML = '<li style="color: var(--text-muted); font-style: italic; padding: 4px 0;">No domains disabled.</li>';
+          return;
+      }
+      whitelistArray.forEach(domain => {
+          const li = document.createElement('li');
+          li.style.display = 'flex';
+          li.style.justifyContent = 'space-between';
+          li.style.alignItems = 'center';
+          li.style.padding = '6px 0';
+          li.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+          
+          const text = document.createElement('span');
+          text.textContent = domain;
+          
+          const removeBtn = document.createElement('button');
+          removeBtn.innerHTML = '&times;';
+          removeBtn.style.background = 'none';
+          removeBtn.style.border = 'none';
+          removeBtn.style.color = '#E11D48';
+          removeBtn.style.cursor = 'pointer';
+          removeBtn.style.fontSize = '16px';
+          removeBtn.style.padding = '0 4px';
+          
+          removeBtn.addEventListener('click', () => {
+              const updated = whitelistArray.filter(d => d !== domain);
+              chrome.storage.sync.set({ whitelist: updated }, () => {
+                  updateWhitelistUI(updated.includes(currentHost));
+                  renderWhitelistManager(updated);
+                  notifyContentScript();
+              });
+          });
+          
+          li.appendChild(text);
+          li.appendChild(removeBtn);
+          whitelistList.appendChild(li);
+      });
+  }
 
   // Helpers
   function saveState(key, value) {
