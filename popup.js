@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   const toggleEmails = document.getElementById('toggle-emails');
   const togglePhones = document.getElementById('toggle-phones');
+  const toggleNumbers = document.getElementById('toggle-numbers');
   const toggleUpi = document.getElementById('toggle-upi');
   const toggleNames = document.getElementById('toggle-names');
   const whitelistList = document.getElementById('whitelist-list');
