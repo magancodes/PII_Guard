@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PII Guard</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="header">
+    <div class="logo-container">
+      <div class="shield-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+      </div>
+      <h1>PII Guard</h1>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="global-toggle">
+      <span class="slider round"></span>
+    </label>
+  </div>
+
+  <div class="content">
+    <div class="current-site-group">
+      <button id="whitelist-btn" class="btn secondary">
+        Disable on this site
+      </button>
+      <p id="site-status" class="status-msg"></p>
+    </div>
+
+    <div class="settings-group">
+      <h3>Detection Types</h3>
+      
+      <div class="setting-item">
+        <span class="setting-label">Emails</span>
+        <label class="switch small">
+          <input type="checkbox" id="toggle-emails">
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <span class="setting-label">Phone Numbers</span>
+        <label class="switch small">
+          <input type="checkbox" id="toggle-phones">
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <span class="setting-label">Numbers (Any)</span>
+        <label class="switch small">
+          <input type="checkbox" id="toggle-numbers">
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <span class="setting-label">UPI URLs / IDs</span>
+        <label class="switch small">
+          <input type="checkbox" id="toggle-upi">
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <div class="label-with-badge">
+          <span class="setting-label">Names (AI)</span>
+          <span class="badge">Pro</span>
+        </div>
+        <label class="switch small">
+          <input type="checkbox" id="toggle-names">
+          <span class="slider round"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button id="options-btn" class="btn ghost">Advanced Settings</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
